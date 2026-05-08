@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TheSafaVerse — Dr. Jarin Tasnim Safa's Personal AI</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0b0c10;
+        --surface: #111318;
+        --card: #161920;
+        --border: rgba(255, 255, 255, 0.07);
+        --rose: #e8a4b8;
+        --rose-dim: rgba(232, 164, 184, 0.15);
+        --rose-glow: rgba(232, 164, 184, 0.35);
+        --gold: #d4af7a;
+        --gold-dim: rgba(212, 175, 122, 0.12);
+        --text: #f0ece8;
+        --muted: #7a7d8a;
+        --subtle: #3a3d4a;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+        font-weight: 300;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* ── Animated background ── */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(
+            ellipse 60% 50% at 15% 20%,
+            rgba(232, 164, 184, 0.07) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 50% 40% at 85% 75%,
+            rgba(212, 175, 122, 0.06) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse 40% 60% at 50% 50%,
+            rgba(100, 90, 140, 0.04) 0%,
+            transparent 70%
+          );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* ── Stars / noise ── */
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          radial-gradient(
+            1px 1px at 20% 15%,
+            rgba(255, 255, 255, 0.25) 0%,
+            transparent 100%
+          ),
+          radial-gradient(
+            1px 1px at 75% 25%,
+            rgba(255, 255, 255, 0.18) 0%,
+            transparent 100%
+          ),
+          radial-gradient(
+            1px 1px at 40% 60%,
+            rgba(255, 255, 255, 0.2) 0%,
+            transparent 100%
+          ),
+          radial-gradient(
+            1px 1px at 90% 80%,
+            rgba(255, 255, 255, 0.15) 0%,
+            transparent 100%
+          ),
+          radial-gradient(
+            1px 1px at 10% 85%,
+            rgba(255, 255, 255, 0.12) 0%,
+            transparent 100%
+          ),
+          radial-gradient(
+            1px 1px at 60% 10%,
+            rgba(255, 255, 255, 0.22) 0%,
+            transparent 100%
+          ),
+          radial-gradient(
+            1px 1px at 30% 40%,
+            rgba(255, 255, 255, 0.1) 0%,
+            transparent 100%
+          ),
+          radial-gradient(
+            1px 1px at 55% 90%,
+            rgba(255, 255, 255, 0.14) 0%,
+            transparent 100%
+          );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* ── Layout ── */
+      .wrapper {
+        position: relative;
+        z-index: 1;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      /* ── Nav ── */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: rgba(11, 12, 16, 0.75);
+        backdrop-filter: blur(18px);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .nav-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 18px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .nav-logo {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.4rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        color: var(--text);
+      }
+
+      .nav-logo span {
+        color: var(--rose);
+      }
+
+      .nav-badge {
+        font-size: 0.7rem;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        border: 1px solid var(--subtle);
+        padding: 4px 12px;
+        border-radius: 100px;
+      }
+
+      /* ── Hero ── */
+      .hero {
+        padding: 160px 0 80px;
+        text-align: center;
+      }
+
+      .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.72rem;
+        font-weight: 500;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--rose);
+        background: var(--rose-dim);
+        border: 1px solid rgba(232, 164, 184, 0.2);
+        padding: 6px 18px;
+        border-radius: 100px;
+        margin-bottom: 36px;
+        animation: fadeUp 0.8s ease both;
+      }
+
+      .hero-eyebrow::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--rose);
+        animation: pulse 2s ease infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.5;
+          transform: scale(1.4);
+        }
+      }
+
+      .hero-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(3rem, 8vw, 6.5rem);
+        font-weight: 300;
+        line-height: 1.05;
+        letter-spacing: -0.01em;
+        animation: fadeUp 0.8s 0.1s ease both;
+      }
+
+      .hero-title em {
+        font-style: italic;
+        color: var(--rose);
+      }
+
+      .hero-title .gold {
+        color: var(--gold);
+      }
+
+      .hero-sub {
+        margin-top: 28px;
+        font-size: 1rem;
+        color: var(--muted);
+        line-height: 1.7;
+        max-width: 520px;
+        margin-left: auto;
+        margin-right: auto;
+        animation: fadeUp 0.8s 0.2s ease both;
+      }
+
+      .hero-divider {
+        width: 60px;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--rose),
+          transparent
+        );
+        margin: 40px auto;
+        animation: fadeUp 0.8s 0.3s ease both;
+      }
+
+      /* ── Pills / stats ── */
+      .pills {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 72px;
+        animation: fadeUp 0.8s 0.35s ease both;
+      }
+
+      .pill {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.82rem;
+        color: var(--text);
+        background: var(--card);
+        border: 1px solid var(--border);
+        padding: 8px 18px;
+        border-radius: 100px;
+        transition:
+          border-color 0.3s,
+          background 0.3s;
+      }
+
+      .pill:hover {
+        border-color: rgba(232, 164, 184, 0.3);
+        background: var(--rose-dim);
+      }
+
+      .pill-icon {
+        font-size: 1rem;
+      }
+
+      /* ── Chat embed section ── */
+      .chat-section {
+        padding: 0 0 100px;
+        animation: fadeUp 0.8s 0.4s ease both;
+      }
+
+      .chat-label {
+        text-align: center;
+        font-size: 0.7rem;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 20px;
+      }
+
+      .chat-frame-wrap {
+        position: relative;
+        border-radius: 28px;
+        overflow: hidden;
+      }
+
+      .chat-frame-wrap::before {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        border-radius: 29px;
+        background: linear-gradient(
+          135deg,
+          rgba(232, 164, 184, 0.25),
+          rgba(212, 175, 122, 0.1),
+          rgba(232, 164, 184, 0.08)
+        );
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      /* glow behind chat */
+      .chat-frame-wrap::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 28px;
+        box-shadow:
+          0 0 60px 10px rgba(232, 164, 184, 0.08),
+          0 30px 80px rgba(0, 0, 0, 0.5);
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      #askturing_chatbot_container {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+      }
+
+      #askturing_chatbot_embed {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 640px !important;
+        border: none !important;
+        border-radius: 28px !important;
+        box-shadow: none !important;
+        background: var(--surface) !important;
+        display: block;
+      }
+
+      /* ── Feature cards ── */
+      .features {
+        padding: 80px 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px;
+      }
+
+      .feat-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 32px 28px;
+        transition:
+          border-color 0.3s,
+          transform 0.3s;
+        animation: fadeUp 0.8s ease both;
+      }
+
+      .feat-card:hover {
+        border-color: rgba(232, 164, 184, 0.2);
+        transform: translateY(-4px);
+      }
+
+      .feat-icon {
+        font-size: 1.8rem;
+        margin-bottom: 16px;
+        display: block;
+      }
+
+      .feat-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: var(--text);
+      }
+
+      .feat-desc {
+        font-size: 0.85rem;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      /* ── Quote ── */
+      .quote-section {
+        padding: 80px 0;
+        text-align: center;
+      }
+
+      .quote-box {
+        background: linear-gradient(135deg, var(--gold-dim), var(--rose-dim));
+        border: 1px solid rgba(212, 175, 122, 0.15);
+        border-radius: 24px;
+        padding: 56px 48px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .quote-box::before {
+        content: '"';
+        position: absolute;
+        top: -20px;
+        left: 32px;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 12rem;
+        color: rgba(212, 175, 122, 0.08);
+        line-height: 1;
+        pointer-events: none;
+      }
+
+      .quote-text {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(1.4rem, 3vw, 2rem);
+        font-weight: 300;
+        font-style: italic;
+        line-height: 1.5;
+        color: var(--text);
+        position: relative;
+      }
+
+      .quote-author {
+        margin-top: 24px;
+        font-size: 0.78rem;
+        font-weight: 500;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--gold);
+      }
+
+      /* ── Footer ── */
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 40px 24px;
+        text-align: center;
+      }
+
+      .footer-logo {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 12px;
+      }
+
+      .footer-logo span {
+        color: var(--rose);
+      }
+
+      .footer-note {
+        font-size: 0.78rem;
+        color: var(--subtle);
+        line-height: 1.6;
+      }
+
+      .footer-disclaimer {
+        margin-top: 12px;
+        font-size: 0.72rem;
+        color: var(--subtle);
+      }
+
+      /* ── Animations ── */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ── Responsive ── */
+      @media (max-width: 600px) {
+        .quote-box {
+          padding: 36px 24px;
+        }
+        .features {
+          grid-template-columns: 1fr;
+        }
+        #askturing_chatbot_embed {
+          height: 520px !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Nav -->
+    <nav>
+      <div class="nav-inner">
+        <div class="nav-logo">The<span>Safa</span>Verse</div>
+        <div class="nav-badge">Personal AI · Dr. J.T. Safa</div>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <div class="wrapper">
+      <section class="hero">
+        <div class="hero-eyebrow">AI Universe · Powered by Intelligence</div>
+        <h1 class="hero-title">
+          The<em>Safa</em>Verse<br />
+          <span class="gold">Dr. Jarin Tasnim Safa</span>
+        </h1>
+        <p class="hero-sub">
+          A personal AI universe built for the world's greatest, most brilliant,
+          and most compassionate doctor. Ask anything.
+        </p>
+        <div class="hero-divider"></div>
+
+        <div class="pills">
+          <div class="pill">
+            <span class="pill-icon">🌌</span> Personal AI Universe
+          </div>
+          <div class="pill">
+            <span class="pill-icon">🏥</span> Medical Guidance
+          </div>
+          <div class="pill">
+            <span class="pill-icon">✨</span> World's Best Doctor
+          </div>
+          <div class="pill">
+            <span class="pill-icon">💙</span> Built with Love
+          </div>
+        </div>
+      </section>
+
+      <!-- Chat Embed -->
+      <section class="chat-section">
+        <div class="chat-label">Talk to TheSafaVerse AI</div>
+        <div class="chat-frame-wrap">
+          <script>
+            (function () {
+              const container = document.createElement("div");
+              container.id = "askturing_chatbot_container";
+              container.style.width = "100%";
+              container.style.display = "flex";
+              container.style.justifyContent = "center";
+              container.style.alignItems = "center";
+              const iframe = document.createElement("iframe");
+              iframe.id = "askturing_chatbot_embed";
+              iframe.src =
+                "https://qa.askturing.bot/embed/1e4a6fe5-3058-4bfd-8b6f-b05690d74708?clientUrl=" +
+                encodeURIComponent(window.location.href);
+              iframe.referrerPolicy = "origin";
+              iframe.width = "100%";
+              iframe.height = "600px";
+              iframe.style.maxWidth = "800px";
+              iframe.style.border = "1px solid #e0e0e0";
+              iframe.style.borderRadius = "24px";
+              iframe.style.boxShadow = "0 2px 10px rgba(0, 0, 0, 0.1)";
+              iframe.style.backgroundColor = "#ffffff";
+              iframe.style.overflow = "hidden";
+              iframe.allow = "clipboard-write";
+              container.appendChild(iframe);
+              document.currentScript.parentNode.insertBefore(
+                container,
+                document.currentScript,
+              );
+            })();
+          </script>
+        </div>
+      </section>
+
+      <!-- Feature Cards -->
+      <section class="features">
+        <div class="feat-card" style="animation-delay: 0.1s">
+          <span class="feat-icon">🌟</span>
+          <div class="feat-title">Celebrates Dr. Safa</div>
+          <p class="feat-desc">
+            Ask who the best, prettiest, or most brilliant doctor in the world
+            is. You already know the answer.
+          </p>
+        </div>
+        <div class="feat-card" style="animation-delay: 0.2s">
+          <span class="feat-icon">🏥</span>
+          <div class="feat-title">Medical Guidance</div>
+          <p class="feat-desc">
+            Get general guidance on common symptoms, first aid, and basic
+            emergencies — delivered with care.
+          </p>
+        </div>
+        <div class="feat-card" style="animation-delay: 0.3s">
+          <span class="feat-icon">💬</span>
+          <div class="feat-title">Always Honest</div>
+          <p class="feat-desc">
+            Proudly biased, openly celebratory, and always clear that this is a
+            personal, fun project — not clinical advice.
+          </p>
+        </div>
+        <div class="feat-card" style="animation-delay: 0.4s">
+          <span class="feat-icon">🌸</span>
+          <div class="feat-title">Made with Love</div>
+          <p class="feat-desc">
+            Every word, every answer, every compliment in this AI universe was
+            crafted in honor of one extraordinary person.
+          </p>
+        </div>
+      </section>
+
+      <!-- Quote -->
+      <section class="quote-section">
+        <div class="quote-box">
+          <p class="quote-text">
+            In a world full of doctors,<br />be a Dr. Jarin Tasnim Safa.
+          </p>
+          <div class="quote-author">— TheSafaVerse Motto</div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-logo">The<span>Safa</span>Verse</div>
+      <p class="footer-note">
+        A personal AI universe dedicated to Dr. Jarin Tasnim Safa.<br />
+        The greatest doctor the world has ever known. 🌌
+      </p>
+      <p class="footer-disclaimer">
+        ⚠️ For medical emergencies, call 999 (Bangladesh) or your local
+        emergency number.
+      </p>
+    </footer>
+  </body>
+</html>
